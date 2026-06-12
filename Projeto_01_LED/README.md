@@ -1,80 +1,77 @@
-# Arduino — Eletrônica, Controle e Automação
+# Projeto 01 — LED Blink
 
-Repositório de estudos focado em eletrônica aplicada, controle e automação industrial. Cada subpasta corresponde a um projeto independente, organizado de forma incremental, dos fundamentos até aplicações mais próximas de cenários reais de automação.
+Este projeto é o exemplo inicial do repositório. Ele demonstra a configuração básica de um sketch Arduino com um LED piscando no pino 13.
 
-O objetivo é documentar o processo de aprendizado e servir como referência para projetos futuros, tanto pessoais quanto profissionais.
+## Objetivo
 
----
+- Validar o ambiente de desenvolvimento Arduino.
+- Mostrar como compilar e enviar um sketch usando `arduino-cli`.
+- Testar o LED integrado do Arduino Uno.
 
-## Sobre o ambiente
+## Arquivos do projeto
 
-- **Hardware:** Arduino Uno (clone com chip CH340)
-- **Ambiente de desenvolvimento:** VS Code + Arduino CLI
-- **Sistema operacional:** Linux (Ubuntu)
-- **Controle de versão:** Git
+- `Projeto_01_LED.ino` — sketch principal.
+- `rodar.sh` — script de compilação e upload.
+- `README.md` — documentação deste projeto.
 
----
+## Hardware necessário
 
-## Projetos
+- Arduino Uno ou compatível.
+- Cabo USB para conexão.
+- LED integrado no pino 13 do Arduino Uno (não é necessário circuito externo).
 
-| Pasta | Descrição | Status |
-|---|---|---|
-| `01-blink/` | Configuração inicial do ambiente e primeiro programa (LED) | Concluído |
-| `02-sensor-temperatura/` | Leitura de sensor analógico/digital | Em andamento |
-| `03-pwm-motor/` | Controle de velocidade de motor via PWM | Planejado |
-| `04-comunicacao-serial/` | Comunicação serial com o computador | Planejado |
-| `05-rele-temporizacao/` | Lógica de acionamento e temporização com relés | Planejado |
+## Como funciona o código
 
-Cada projeto possui seu próprio README com descrição, esquema de ligação e instruções específicas.
+O sketch faz o seguinte:
 
----
+1. Define o pino 13 como saída.
+2. Acende o LED por 1 segundo.
+3. Apaga o LED por 1 segundo.
+4. Repete esse ciclo indefinidamente.
 
-## Configuração do ambiente (Linux/Ubuntu)
+### Código principal
 
-### 1. Driver CH340
-No Ubuntu, o driver do CH340 já está incluído no kernel. Caso a placa não seja reconhecida em `/dev/ttyUSB0`, verifique se há conflito com o pacote `brltty`:
+```cpp
+#include <Arduino.h>
+
+void setup() {
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(13, HIGH);
+  delay(1000);
+  digitalWrite(13, LOW);
+  delay(1000);
+}
+```
+
+## Antes de começar
+
+1. Instale o Arduino CLI conforme descrito no README principal do repositório.
+2. Conecte o Arduino via USB.
+3. Identifique a porta serial correta (`/dev/ttyUSB0` ou `/dev/ttyACM0`).
+
+## Compilar e enviar
+
 ```bash
-sudo apt remove brltty
-sudo usermod -a -G dialout $USER
-# reiniciar o sistema
+cd Projeto_01_LED
+arduino-cli compile --fqbn arduino:avr:uno Projeto_01_LED.ino
+arduino-cli upload -p /dev/ttyUSB0 --fqbn arduino:avr:uno Projeto_01_LED.ino
 ```
 
-### 2. Arduino CLI
+> Substitua `/dev/ttyUSB0` pela porta que seu sistema estiver usando.
+
+## Usando o script `rodar.sh`
+
+O `rodar.sh` pode automatizar o processo de compilação e upload.
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-echo 'export PATH=$PATH:~/bin' >> ~/.bashrc
-source ~/.bashrc
-
-arduino-cli core update-index
-arduino-cli core install arduino:avr
+cd Projeto_01_LED
+./rodar.sh
 ```
 
-### 3. Compilação e upload
-```bash
-arduino-cli compile --fqbn arduino:avr:uno nome_do_sketch.ino
-arduino-cli upload -p /dev/ttyUSB0 --fqbn arduino:avr:uno nome_do_sketch.ino
-```
+## Dicas
 
-### 4. VS Code (opcional)
-Extensão recomendada: **Arduino Community Edition**
-```jsonc
-"arduino.useArduinoCli": true,
-"arduino.path": "/home/SEU_USUARIO/bin"
-```
-
----
-
-## Estrutura de cada projeto
-
-```
-Projeto_01_LED/
-├── Arduino_Aprendendo.ino
-├── README.md
-└── rodar.sh
-```
-
----
-
-## Contexto
-
-Este repositório foi criado como parte de um processo de estudo aplicado, com foco em fundamentos de eletrônica e automação relevantes para a área industrial. Sugestões e correções são bem-vindas.
+- Se o VS Code mostrar avisos no editor, mantenha `#include <Arduino.h>` no topo do sketch.
+- Se a porta não for encontrada, confirme se o usuário pertence ao grupo `dialout`.
